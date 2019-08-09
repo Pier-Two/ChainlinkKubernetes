@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chainlink-deployment
+  labels:
+    app: chainlink-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chainlink-node
+  template:
+    metadata:
+      labels:
+        app: chainlink-node
+    spec:
+      containers:
+        - name: chainlink
+          image: smartcontract/chainlink:latest
+          command: ["/bin/bash", "-c", "cat /.chainlink-ropsten/.env && cd /.chainlink-ropsten"]
+          args: ["-p 6688:6688 -v /.chainlink-ropsten:/chainlink --env-file=.env smartcontract/chainlink local n"]
+          ports:
+          - containerPort: 6689
+          volumeMounts:
+            - name: config-volume
+              mountPath: /.chainlink-ropsten/.env
+              subPath: .env
+      volumes:
+        - name: config-volume
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: node-env
