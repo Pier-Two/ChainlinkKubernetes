@@ -17,17 +17,27 @@ spec:
       containers:
         - name: chainlink
           image: smartcontract/chainlink:latest
-          command: ["/bin/bash", "-c", "cat /.chainlink-ropsten/.env && cd /.chainlink-ropsten"]
-          args: ["-p 6688:6688 -v /.chainlink-ropsten:/chainlink --env-file=.env smartcontract/chainlink local n"]
+          #command: ["/bin/bash", "-c", "ls /chainlink -la"]
+          args: ["local", "n", "--password /chainlink/.password", "--api /chainlink/.api"]
           ports:
           - containerPort: 6689
           volumeMounts:
             - name: config-volume
-              mountPath: /.chainlink-ropsten/.env
+              mountPath: /chainlink/.env
               subPath: .env
+            - name: api-volume
+              mountPath: /chainlink/.api
+              subPath: .api
+            - name: password-volume
+              mountPath: /chainlink/.password
+              subPath: .password
       volumes:
         - name: config-volume
           configMap:
-            # Provide the name of the ConfigMap containing the files you want
-            # to add to the container
             name: node-env
+        - name: api-volume
+          configMap:
+            name: api-env
+        - name: password-volume
+          configMap:
+            name: password-env
