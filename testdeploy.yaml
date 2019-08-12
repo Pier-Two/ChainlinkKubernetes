@@ -17,7 +17,7 @@ spec:
       containers:
         - name: chainlink
           image: smartcontract/chainlink:latest
-          #command: ["/bin/bash", "-c", "ls /chainlink -la"]
+          #command: ["/bin/bash", "-c", "echo $(ETH_URL)"]
           args: ["local", "n", "-p",  "/chainlink/.password", "-a", "/chainlink/.api"]
           envFrom:
           - configMapRef:
@@ -25,19 +25,22 @@ spec:
           ports:
           - containerPort: 6689
           volumeMounts:
-            - name: config-volume
-              mountPath: /chainlink/.env
-              subPath: .env
             - name: api-volume
               mountPath: /chainlink/.api
               subPath: .api
             - name: password-volume
               mountPath: /chainlink/.password
               subPath: .password
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 6689
+              httpHeaders:
+              - name: Content-Type
+                value: text-html; charset=utf-8
+            initialDelaySeconds: 5
+            periodSeconds: 5
       volumes:
-        - name: config-volume
-          configMap:
-            name: node-env
         - name: api-volume
           configMap:
             name: api-env
