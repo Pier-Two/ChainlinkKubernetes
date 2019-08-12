@@ -18,7 +18,10 @@ spec:
         - name: chainlink
           image: smartcontract/chainlink:latest
           #command: ["/bin/bash", "-c", "ls /chainlink -la"]
-          args: ["local", "n", "--password /chainlink/.password", "--api /chainlink/.api"]
+          args: ["local", "n", "-p",  "/chainlink/.password", "-a", "/chainlink/.api"]
+          envFrom:
+          - configMapRef:
+              name: node-env
           ports:
           - containerPort: 6689
           volumeMounts:
