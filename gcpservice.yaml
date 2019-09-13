@@ -1,0 +1,16 @@
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "chainlink-deployment-service"
+  namespace: "default"
+  labels:
+    app: "chainlink-node"
+spec:
+  ports:
+  - protocol: "TCP"
+    port: 6689
+    targetPort: 6689
+  selector:
+    app: "chainlink-node"
+  type: "LoadBalancer"
+  loadBalancerIP: ""

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chainlink-service
+spec:
+  selector:
+    app: chainlink-node
+  ports:
+    - protocol: TCP
+      port: 6688
+      targetPort: 6688

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: chainlink-node
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: chainlink-node
@@ -23,7 +23,7 @@ spec:
           - configMapRef:
               name: node-env
           ports:
-          - containerPort: 6689
+          - containerPort: 6688
           volumeMounts:
             - name: api-volume
               mountPath: /chainlink/.api
@@ -31,19 +31,10 @@ spec:
             - name: password-volume
               mountPath: /chainlink/.password
               subPath: .password
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 6689
-              httpHeaders:
-              - name: Content-Type
-                value: text-html; charset=utf-8
-            initialDelaySeconds: 5
-            periodSeconds: 5
       volumes:
         - name: api-volume
-          configMap:
-            name: api-env
+          secret:
+            secretName: api-env
         - name: password-volume
-          configMap:
-            name: password-env
+          secret:
+            secretName: password-env
