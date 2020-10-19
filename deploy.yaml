@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: chainlink
-          image: smartcontract/chainlink:latest
-          #command: ["/bin/bash", "-c", "echo $(ETH_URL)"]
+          image: smartcontract/chainlink:0.9.2
           args: ["local", "n", "-p",  "/chainlink/.password", "-a", "/chainlink/.api"]
           envFrom:
           - configMapRef:

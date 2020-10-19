@@ -1,2 +1,4 @@
 .api
 .password
+.env
+.config.txt
